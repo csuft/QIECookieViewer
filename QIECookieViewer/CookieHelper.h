@@ -8,6 +8,7 @@
 #include <string.h>
 #include <assert.h>
 #include <Windows.h>
+#include <QSysInfo>
 
 using std::string;
 using std::vector;

@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qiecookieviewer.ui'
 **
-** Created: Tue Jan 21 19:52:42 2014
-**      by: Qt User Interface Compiler version 5.0.0
+** Created by: Qt User Interface Compiler version 5.0.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/

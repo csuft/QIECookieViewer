@@ -1,8 +1,7 @@
 /****************************************************************************
 ** Resource object code
 **
-** Created: Mon Jan 20 21:11:24 2014
-**      by: The Resource Compiler for Qt version 5.0.0
+** Created by: The Resource Compiler for Qt version 5.0.2
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -10,7 +9,7 @@
 #include <QtCore/qglobal.h>
 
 static const unsigned char qt_resource_data[] = {
-  // E:/codes/qt/QIECookieViewer/QIECookieViewer/images/os-apple.png
+  // E:/11-codes/qt/QIECookieViewer/QIECookieViewer/images/os-apple.png
   0x0,0x0,0x3,0xb1,
   0x89,
   0x50,0x4e,0x47,0xd,0xa,0x1a,0xa,0x0,0x0,0x0,0xd,0x49,0x48,0x44,0x52,0x0,

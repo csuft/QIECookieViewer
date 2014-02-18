@@ -4,9 +4,9 @@
 CookieHelper::CookieHelper(void)
 {
 	// Need to be fixed
-	const char* fileName = "C:\\Documents and Settings\\Administrator\\Cookies\\index.dat";
+	const string fileName = getCookiePath("index.dat");
 	// create a kernel file object
-	m_hFile = CreateFileA(fileName, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN|FILE_ATTRIBUTE_READONLY, NULL);
+	m_hFile = CreateFileA(fileName.c_str(), GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN|FILE_ATTRIBUTE_READONLY, NULL);
 	if (m_hFile == INVALID_HANDLE_VALUE)
 	{
 		MessageBoxA(NULL, "Error", "Can't open the index.dat file.", MB_OKCANCEL);
@@ -38,8 +38,8 @@ CookieHelper::CookieHelper(void)
 
 CookieHelper::~CookieHelper(void)
 {
+	if (m_startAddr) UnmapViewOfFile((PBYTE)m_startAddr);
 	if (m_hMapping) CloseHandle(m_hMapping);
-	//if (m_startAddr) CloseHandle(m_startAddr);
 	if (m_hFile) CloseHandle(m_hFile);
 }
 
@@ -153,15 +153,33 @@ const string CookieHelper::transformTimeFormat(LONGLONG dtime)
  * Return different path prefixes depend on the type of 
  * the underlying Operating System
  */
-const string CookieHelper::getCookiePath(const char* name)
+const string CookieHelper::getCookiePath(const char* appendice)
 {
-	// For Windows XP.
-	return string("C:\\Documents and Settings\\Administrator\\Cookies\\").append(name);
+	DWORD len;
+	const int BUFSIZE = 1024;
+	char windir[BUFSIZE] = {'\0'};
+	char paths[BUFSIZE] = {'\0'};
+	GetWindowsDirectoryA(windir, BUFSIZE);
+	QSysInfo sysinfo;
+	if (QSysInfo::WV_WINDOWS7 == sysinfo.windowsVersion())  // For Windows 7.
+	{
+		char uname[BUFSIZE] = {'\0'};
+		GetUserNameA(uname, &len);
+		_snprintf(paths, 256, "%c:\\Users\\%s\\AppData\\Roaming\\Microsoft\\Windows\\Cookies\\%s", windir[0], uname, appendice);
+	}
+	else if (QSysInfo::WV_XP == sysinfo.windowsVersion())  // For Windows XP.
+	{
+		_snprintf(paths, 256, "%c\\Documents and Settings\\Administrator\\Cookies\\%s", windir[0], appendice);
+	}
+	else // For other Windows versions.
+	{
+		_snprintf(paths, 256, "");
+	}
+	return paths;
 }
 
 void CookieHelper::splitCookieURL(char* url, CacheEntry& obj)
 {
-	assert(url != NULL);
 	char* chPtrStart = NULL;
 	char* chPtrEnd = NULL;
 	const int BUFSIZE = 128;
