@@ -94,7 +94,7 @@ void CookieHelper::initializeEntriesVec()
 		while (ordNum <= (hashEntry.nBlocks*0x80-16)/8 && hashItem.dwOffset != 0xDEADBEEF)
 		{
 			// skip the holes in the hash section until the end of hash section.
-			if (hashItem.dwHash != 0x0 && hashItem.dwHash != 0x3)
+			if (hashItem.dwHash != 0x0 && hashItem.dwHash != 0x3 && hashItem.dwHash != 0x1)
 			{
 				lpie5Record = (LPIE5_URL_FILEMAP_ENTRY)(m_startAddr + hashItem.dwOffset);
 				memcpy(&ie5Record, lpie5Record, sizeof(IE5_URL_FILEMAP_ENTRY));
@@ -184,14 +184,21 @@ void CookieHelper::splitCookieURL(char* url, CacheEntry& obj)
 	char* chPtrEnd = NULL;
 	const int BUFSIZE = 128;
 	char  tmp[BUFSIZE] = {'\0'};
+	if (url == NULL)
+	{
+		obj.m_user = "N/A";
+		obj.m_website = "N/A";
+	}
+	else
+	{
+		chPtrStart = strchr(url, ':');
+		chPtrEnd = strchr(url, '@');
+		strncpy(tmp, chPtrStart+1, chPtrEnd - chPtrStart - 1);
+		obj.m_user = tmp;
 
-	chPtrStart = strchr(url, ':');
-	chPtrEnd = strchr(url, '@');
-	strncpy(tmp, chPtrStart+1, chPtrEnd - chPtrStart - 1);
-	obj.m_user = tmp;
-
-	memset(tmp, 0, BUFSIZE);
-	chPtrStart = chPtrEnd;
-	strncpy(tmp, chPtrStart+1, strlen(chPtrStart+1));
-	obj.m_website = tmp;
+		memset(tmp, 0, BUFSIZE);
+		chPtrStart = chPtrEnd;
+		strncpy(tmp, chPtrStart+1, strlen(chPtrStart+1));
+		obj.m_website = tmp;
+	}
 }
